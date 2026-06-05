@@ -554,7 +554,7 @@
 
 <div id="cursor"></div>
 
-<!-- AMBIENT MUSIC (Web Audio API — soft lo-fi generative) -->
+<!-- AMBIENT MUSIC (Web Audio API — soft lofi generative) -->
 <button id="music-btn" onclick="toggleMusic()">♪ AMBIENCE OFF</button>
 
 <nav>
@@ -1203,6 +1203,7 @@ function openPoem(i) {
   document.body.style.overflow = 'hidden';
 }
 function closeModal() {
+  document.getElementById('poem-modal').classList.remove('remove');
   document.getElementById('poem-modal').classList.remove('open');
   document.body.style.overflow = '';
 }
@@ -1255,51 +1256,151 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 revealEls.forEach(el => observer.observe(el));
 
-// WEB AUDIO AMBIENT MUSIC
+
+/* ==========================================================================
+   ADVANCED WEB AUDIO API ENGINE: GENEATIVE CALM NATURE PIANO (PROPRIETARY)
+   ========================================================================== */
 let audioCtx = null;
 let musicOn = false;
-let nodes = [];
+let ambientNodes = [];
+let pianoTimeout = null;
+
+// C-Major Pentatonic Scale for beautiful, completely safe harmonies
+const pianoScale = [130.81, 146.83, 164.81, 196.00, 220.00, 261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
 
 function startAmbience() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const master = audioCtx.createGain();
-  master.gain.value = 0.08;
-  master.connect(audioCtx.destination);
+  
+  // Master control chain
+  const masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.55; 
+  masterGain.connect(audioCtx.destination);
 
-  // Soft pad chords: Cmaj7 voicing
-  const freqs = [261.63, 329.63, 392.00, 493.88, 523.25];
-  freqs.forEach((f, i) => {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
-    osc.frequency.value = f;
-    gain.gain.value = 0.18;
-    osc.connect(gain);
-    gain.connect(master);
-    osc.start();
-    nodes.push(osc);
+  // 1. GENERATE NATURE LAYERS (Rain & Rustling Trees using Custom Noise Buffers)
+  const bufferSize = audioCtx.sampleRate * 4;
+  const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const outputData = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    outputData[i] = Math.random() * 2 - 1;
+  }
+
+  const noiseSource = audioCtx.createBufferSource();
+  noiseSource.buffer = noiseBuffer;
+  noiseSource.loop = true;
+
+  // Nature Audio Filter Design (Bandpass creates rustling wind and soft rain drops)
+  const natureFilter = audioCtx.createBiquadFilter();
+  natureFilter.type = 'bandpass';
+  natureFilter.frequency.value = 450; 
+  natureFilter.Q.value = 0.4;
+
+  const natureGain = audioCtx.createGain();
+  natureGain.gain.value = 0.025; // Gentle baseline nature atmosphere level
+
+  // Modulate the wind with a low frequency automated swell
+  const windModulator = audioCtx.createOscillator();
+  windModulator.frequency.value = 0.15; // Slow 6-7 second wave cycle
+  const windGain = audioCtx.createGain();
+  windGain.gain.value = 150; // Sweeps back and forth through frequencies
+
+  windModulator.connect(windGain);
+  windGain.connect(natureFilter.frequency);
+  noiseSource.connect(natureFilter);
+  natureFilter.connect(natureGain);
+  natureGain.connect(masterGain);
+
+  windModulator.start();
+  noiseSource.start();
+
+  ambientNodes.push(windModulator, noiseSource, natureFilter, natureGain);
+
+  // 2. GENERATE PEACEFUL BACKGROUND SYNTH PADS
+  const padFrequencies = [130.81, 196.00, 329.63, 440.00]; // Multi-octave background canvas
+  padFrequencies.forEach((frequency) => {
+    const oscillator = audioCtx.createOscillator();
+    const padGain = audioCtx.createGain();
+    
+    oscillator.type = 'sine';
+    oscillator.frequency.value = frequency;
+    padGain.gain.value = 0.015;
+
+    oscillator.connect(padGain);
+    padGain.connect(masterGain);
+    oscillator.start();
+
+    ambientNodes.push(oscillator, padGain);
   });
 
-  // Subtle noise texture
-  const bufSize = audioCtx.sampleRate * 2;
-  const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-  const data = buf.getChannelData(0);
-  for(let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1) * 0.02;
-  const src = audioCtx.createBufferSource();
-  src.buffer = buf;
-  src.loop = true;
-  const nGain = audioCtx.createGain();
-  nGain.gain.value = 0.06;
-  src.connect(nGain);
-  nGain.connect(master);
-  src.start();
-  nodes.push(src);
+  // 3. TRIGGER DELAYED GENERATIVE PIANO GENERATOR
+  triggerGenerativePiano(masterGain);
+}
+
+function triggerGenerativePiano(destinationNode) {
+  if (!musicOn || !audioCtx) return;
+
+  // Pick a relaxing random note from our gorgeous pentatonic collection
+  const selectedFrequency = pianoScale[Math.floor(Math.random() * pianoScale.length)];
+  
+  // Emulate physical organic hammer strikes via rapid multi-component synthesis
+  const oscillator1 = audioCtx.createOscillator();
+  const oscillator2 = audioCtx.createOscillator();
+  const pianoGain = audioCtx.createGain();
+
+  oscillator1.type = 'sine';
+  oscillator1.frequency.value = selectedFrequency;
+  
+  // Second tone frequency overtone mimics realistic wooden soundbox resonance
+  oscillator2.type = 'triangle';
+  oscillator2.frequency.value = selectedFrequency * 2;
+
+  // Custom Biquad Lowpass filter prevents electronic sharpness, keeping the piano soft and warm
+  const warmToneFilter = audioCtx.createBiquadFilter();
+  warmToneFilter.type = 'lowpass';
+  warmToneFilter.frequency.value = 1100;
+
+  pianoGain.connect(warmToneFilter);
+  warmToneFilter.connect(destinationNode);
+
+  // Reverb & Decay Volume Envelope calculations
+  const immediateTime = audioCtx.currentTime;
+  pianoGain.gain.setValueAtTime(0, immediateTime);
+  
+  // Instant piano key hit execution
+  pianoGain.gain.linearRampToValueAtTime(Math.random() * 0.12 + 0.06, immediateTime + 0.04);
+  
+  // Smooth, lingering eco trail release mimicking pedal sustain
+  pianoGain.gain.exponentialRampToValueAtTime(0.0001, immediateTime + 4.5);
+
+  oscillator1.connect(pianoGain);
+  oscillator2.connect(pianoGain);
+  
+  oscillator1.start(immediateTime);
+  oscillator2.start(immediateTime);
+
+  // Safely stop background processors after decay finish lines
+  oscillator1.stop(immediateTime + 4.6);
+  oscillator2.stop(immediateTime + 4.6);
+
+  // Set completely randomized rhythmic timing separation parameters for human-like intervals
+  const nextNoteDelay = Math.random() * 2200 + 1400; // Plays sequentially every 1.5 to 3.5 seconds
+  pianoTimeout = setTimeout(() => triggerGenerativePiano(destinationNode), nextNoteDelay);
 }
 
 function stopAmbience() {
-  if(audioCtx) {
-    nodes.forEach(n => { try { n.stop(); } catch(e){} });
-    nodes = [];
+  // Clear any pending generative note calculations safely
+  if (pianoTimeout) {
+    clearTimeout(pianoTimeout);
+    pianoTimeout = null;
+  }
+  
+  // Disconnect and wipe working audio processors immediately
+  ambientNodes.forEach(node => {
+    try { node.stop(); } catch(e) {}
+    try { node.disconnect(); } catch(e) {}
+  });
+  ambientNodes = [];
+  
+  if (audioCtx) {
     audioCtx.close();
     audioCtx = null;
   }
