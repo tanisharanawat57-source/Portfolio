@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanisha Ranawat — Writer & Poet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a0a2e;
+    --paper: #fdf6e9;
+    --paper2: #f5ead6;
+    --gold: #c9935a;
+    --rose: #d4607a;
+    --sage: #6b8f71;
+    --dustblue: #7893b0;
+    --lavender: #9b7fb6;
+    --pixel: #2d1b5e;
+    --bubble: #fff9ee;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Lora', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  #cursor {
+    width: 12px; height: 12px;
+    background: var(--rose);
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    image-rendering: pixelated;
+    clip-path: polygon(0 0,100% 0,100% 60%,60% 60%,60% 100%,0 100%);
+    transition: transform 0.1s;
+  }
+
+  /* MUSIC TOGGLE */
+  #music-btn {
+    position: fixed; bottom: 24px; right: 24px;
+    z-index: 1000;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 10px 14px;
+    cursor: pointer;
+    image-rendering: pixelated;
+    clip-path: polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);
+    transition: background 0.2s;
+    letter-spacing: 0.05em;
+  }
+  #music-btn:hover { background: var(--rose); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 48px;
+    background: rgba(253,246,233,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--gold);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--rose); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, #fdf6e9 60%, #f0dfc8 100%);
+  }
+  .hero-bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,147,90,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,147,90,0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .hero-content {
+    text-align: center;
+    position: relative; z-index: 2;
+    padding: 120px 24px 60px;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 9vw, 96px);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    animation: fadeUp 0.8s ease 0.15s both;
+  }
+  .hero-name em {
+    color: var(--rose);
+    font-style: italic;
+  }
+  .hero-tagline {
+    font-family: 'Lora', serif;
+    font-size: clamp(15px, 2vw, 18px);
+    font-style: italic;
+    color: var(--ink);
+    opacity: 0.65;
+    margin-top: 20px;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+  .hero-stats {
+    display: flex; gap: 40px; justify-content: center;
+    margin-top: 48px;
+    animation: fadeUp 0.8s ease 0.45s both;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--rose);
+    display: block;
+  }
+  .hero-stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    opacity: 0.5;
+    text-transform: uppercase;
+  }
+  .hero-scroll {
+    margin-top: 64px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    opacity: 0.4;
+    animation: bounce 2s infinite;
+  }
+
+  /* FLOATING PIXEL BIRDS */
+  .pixel-birds {
+    position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  }
+  .pbird {
+    position: absolute;
+    image-rendering: pixelated;
+    animation: flyBird linear infinite;
+    opacity: 0.7;
+  }
+
+  /* SECTION WRAPPER */
+  section { padding: 100px 0; }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 32px; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 48px;
+  }
+
+  /* ABOUT */
+  #about { background: var(--paper2); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+  }
+  .about-bio p {
+    font-size: 16px; line-height: 1.85;
+    color: var(--ink); opacity: 0.82;
+    margin-bottom: 18px;
+  }
+  .about-bio p:first-child::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 56px; font-weight: 700;
+    float: left; line-height: 0.8;
+    margin-right: 8px; margin-top: 10px;
+    color: var(--rose);
+  }
+  .about-details { display: flex; flex-direction: column; gap: 16px; }
+  .detail-row {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 16px;
+    border-left: 3px solid var(--gold);
+    background: var(--paper);
+  }
+  .detail-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .detail-val {
+    font-size: 14px; color: var(--ink);
+  }
+  .skills-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .skill-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    padding: 6px 12px;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    opacity: 0.6;
+    transition: all 0.2s;
+  }
+  .skill-tag:hover { opacity: 1; background: var(--ink); color: var(--paper); }
+
+  /* EXPERIENCE */
+  #experience { background: var(--paper); }
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 32px; padding: 32px 0;
+    border-bottom: 1px solid rgba(26,10,46,0.1);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .exp-item.visible { opacity: 1; transform: none; }
+  .exp-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--gold);
+    padding-top: 4px;
+  }
+  .exp-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .exp-org {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--rose);
+    letter-spacing: 0.08em; margin-bottom: 12px;
+  }
+  .exp-desc {
+    font-size: 14px; line-height: 1.7;
+    color: var(--ink); opacity: 0.72;
+  }
+
+  /* POEMS */
+  #poems { background: var(--paper2); }
+  .poems-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .poem-card {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid rgba(201,147,90,0.3);
+    padding: 32px 28px 28px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0; transform: translateY(30px);
+  }
+  .poem-card.visible { opacity: 1; transform: translateY(0); }
+  .poem-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0 var(--gold);
+  }
+
+  /* PIXEL CHARACTER ON CARD */
+  .pixel-char {
+    position: absolute;
+    top: -28px; left: 20px;
+    image-rendering: pixelated;
+    z-index: 10;
+  }
+  .thought-bubble {
+    position: absolute;
+    top: -52px; left: 52px;
+    background: var(--bubble);
+    border: 2px solid var(--ink);
+    padding: 4px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--ink);
+    white-space: nowrap;
+    z-index: 11;
+    letter-spacing: 0.05em;
+  }
+  .thought-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 12px;
+    width: 6px; height: 6px;
+    background: var(--bubble);
+    border-right: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .poem-theme-dot {
+    width: 8px; height: 8px;
+    border-radius: 0;
+    display: inline-block;
+    margin-right: 6px;
+    image-rendering: pixelated;
+  }
+  .poem-theme {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center;
+  }
+  .poem-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .poem-excerpt {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink); opacity: 0.7;
+    margin-bottom: 20px;
+  }
+  .poem-read-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    color: var(--rose); text-transform: uppercase;
+    background: none; border: none; cursor: pointer;
+    padding: 0; transition: letter-spacing 0.2s;
+  }
+  .poem-read-btn:hover { letter-spacing: 0.25em; }
+
+  /* POEM MODAL */
+  #poem-modal {
+    position: fixed; inset: 0;
+    background: rgba(26,10,46,0.85);
+    z-index: 2000;
+    display: none; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  #poem-modal.open { display: flex; }
+  .modal-inner {
+    background: var(--paper);
+    max-width: 600px; width: 100%;
+    max-height: 88vh; overflow-y: auto;
+    padding: 48px;
+    position: relative;
+    border: 1px solid var(--gold);
+  }
+  .modal-close {
+    position: absolute; top: 20px; right: 20px;
+    background: none; border: none; cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 18px; color: var(--ink); opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+  .modal-close:hover { opacity: 1; }
+  .modal-theme {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 700;
+    color: var(--ink); margin-bottom: 32px;
+    line-height: 1.1;
+  }
+  .modal-poem {
+    font-family: 'Lora', serif;
+    font-size: 15px; line-height: 2;
+    color: var(--ink); opacity: 0.85;
+    white-space: pre-line;
+  }
+
+  /* ARTICLES */
+  #articles { background: var(--paper); }
+  .articles-list { display: flex; flex-direction: column; gap: 24px; }
+  .article-row {
+    display: grid; grid-template-columns: 80px 1fr;
+    gap: 24px; align-items: start;
+    padding: 24px 0; border-bottom: 1px solid rgba(26,10,46,0.08);
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .article-row.visible { opacity: 1; transform: none; }
+  .article-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 700;
+    color: var(--gold); opacity: 0.3;
+    line-height: 1;
+  }
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--ink); margin-bottom: 8px;
+  }
+  .article-snippet {
+    font-size: 14px; line-height: 1.7;
+    color: var(--ink); opacity: 0.65;
+  }
+  .article-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    margin-top: 10px;
+    border: 1px solid currentColor;
+  }
+  .tag-essay { color: var(--sage); }
+  .tag-social { color: var(--rose); }
+  .tag-reflect { color: var(--lavender); }
+
+  /* CERTIFICATIONS */
+  #certs { background: var(--paper2); }
+  .certs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .cert-card {
+    padding: 24px;
+    background: var(--paper);
+    border-top: 3px solid var(--gold);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .cert-card.visible { opacity: 1; transform: none; }
+  .cert-issuer {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .cert-name {
+    font-family: 'Lora', serif;
+    font-size: 15px; font-weight: 600;
+    color: var(--ink); line-height: 1.4;
+  }
+  .cert-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--ink);
+    opacity: 0.4; margin-top: 10px;
+  }
+
+  /* CONTACT */
+  #contact {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+  }
+  #contact .section-label { color: var(--gold); }
+  #contact .section-title { color: var(--paper); }
+  .contact-links { display: flex; gap: 32px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+  .contact-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--paper); text-decoration: none;
+    opacity: 0.6; transition: opacity 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .contact-link:hover { opacity: 1; color: var(--gold); }
+  .contact-link::before { content: '→'; color: var(--rose); }
+
+  /* FLOATING PIXEL DECORATIONS */
+  .pixel-deco {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: currentColor;
+    image-rendering: pixelated;
+    margin: 0 4px;
+    vertical-align: middle;
+    opacity: 0.4;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes flyBird {
+    from { transform: translateX(-80px); }
+    to { transform: translateX(110vw); }
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes pixelPulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes waveText {
+    0%,100% { transform: skewX(0deg); }
+    25% { transform: skewX(-1deg); }
+    75% { transform: skewX(1deg); }
+  }
+
+  /* PIXEL CHARACTER SVGs inline */
+  .char-animate { animation: float 3s ease-in-out infinite; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--paper2); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* RESPONSIVE */
+  @media(max-width: 700px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+    .poems-grid { grid-template-columns: 1fr; }
+    .certs-grid { grid-template-columns: 1fr 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; }
+    .hero-stats { gap: 24px; }
+    .modal-inner { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- AMBIENT MUSIC (Web Audio API — soft lo-fi generative) -->
+<button id="music-btn" onclick="toggleMusic()">♪ AMBIENCE OFF</button>
+
+<nav>
+  <a href="#" class="nav-logo">TR</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Work</a></li>
+    <li><a href="#poems">Poetry</a></li>
+    <li><a href="#articles">Writing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+
+  <!-- PIXEL BIRDS FLOATING -->
+  <div class="pixel-birds" id="birdContainer"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">✦ Content Writer · Poet · Scriptwriter</p>
+    <h1 class="hero-name">Tanisha<br><em>Ranawat</em></h1>
+    <p class="hero-tagline">Words from a life lived in motion — army child, student, storyteller.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">13+</span>
+        <span class="hero-stat-label">Poems</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">91.6%</span>
+        <span class="hero-stat-label">CBSE Aggregate</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">2×</span>
+        <span class="hero-stat-label">Red FM Certified</span>
+      </div>
+    </div>
+    <p class="hero-scroll">↓ scroll to read</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <p class="section-label">// 01 — About</p>
+    <div class="about-grid">
+      <div class="about-bio">
+        <p>I grew up between cities, cantonments, and classrooms — an Army kid with a suitcase always half-packed and a notebook always full. That constant motion taught me to observe fast and feel deeply, and writing became the way I made sense of both.</p>
+        <p>I just finished Class 12 Commerce at Army Public School, Clement Town, and I'm heading into BBA (Business Analytics) at Chandigarh University. My writing lives at the intersection of raw feeling and clear thinking — poetry that confesses, essays that argue, scripts that land.</p>
+        <p>I've co-scripted and presented on Red FM 93.5 two seasons running, argued policy in Youth Parliament, and written about everything from dowry to the strange comfort of chaos. I'm looking for a content writing internship where I can bring all of that to real work.</p>
+        <div class="skills-tags">
+          <span class="skill-tag">Content Writing</span>
+          <span class="skill-tag">Scriptwriting</span>
+          <span class="skill-tag">SEO Writing</span>
+          <span class="skill-tag">Poetry</span>
+          <span class="skill-tag">Research</span>
+          <span class="skill-tag">Public Speaking</span>
+          <span class="skill-tag">Proofreading</span>
+          <span class="skill-tag">Data Literacy</span>
+          <span class="skill-tag">MS Office</span>
+        </div>
+      </div>
+      <div class="about-details">
+        <div class="detail-row">
+          <span class="detail-label">Currently</span>
+          <span class="detail-val">BBA Business Analytics, Chandigarh University (2026–2029)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Previously</span>
+          <span class="detail-val">Class 12 Commerce, APS Clement Town, Dehradun — 91.6%</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Location</span>
+          <span class="detail-val">Bhilwara, Rajasthan (roots: Army cantonments across India)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Email</span>
+          <span class="detail-val">tanisharanawat57@gmail.com</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">LinkedIn</span>
+          <span class="detail-val"><a href="https://linkedin.com/in/tanisha-ranawat-019b6a354/" style="color:var(--rose);text-decoration:none;">linkedin.com/in/tanisha-ranawat</a></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">IP Score</span>
+          <span class="detail-val">96/100 in Informatics Practices</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <p class="section-label">// 02 — Work & Experience</p>
+    <h2 class="section-title">What I've done</h2>
+    <div class="exp-list">
+      <div class="exp-item">
+        <div class="exp-date">Oct 2024 &amp; Jul 2025</div>
+        <div>
+          <p class="exp-role">Radio Scriptwriter &amp; On-Air Presenter</p>
+          <p class="exp-org">APS FM — Red FM 93.5 Partnership</p>
+          <p class="exp-desc">Co-scripted and performed narrative audio skits for two consecutive seasons. Earned Certificates of Appreciation from Red FM 93.5 for on-air excellence and creative content. Optimised script pacing and conversational flow for short-form radio; coordinated with production teams on thematic alignment.</p>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-date">May 2024 – Present</div>
+        <div>
+          <p class="exp-role">Digital Content Creator &amp; Essay Writer</p>
+          <p class="exp-org">Independent Portfolio</p>
+          <p class="exp-desc">Author and publish original analytical essays and poetry on professional platforms. Produce SEO-conscious, research-backed content tailored to platform audiences across long-form and short-form formats. Published works include "Prepared, Not Scared" — an essay on human resilience.</p>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-date">Aug 2025 – Mar 2026</div>
+        <div>
+          <p class="exp-role">Parliamentarian</p>
+          <p class="exp-org">Youth Parliament Forum — APS Clement Town Academic Council</p>
+          <p class="exp-desc">Delivered structured legislative arguments in simulated national policy debates. Received formal citation for Exemplary Performance from the Academic Council.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POEMS -->
+<section id="poems">
+  <div class="container">
+    <p class="section-label">// 03 — Poetry</p>
+    <h2 class="section-title">Verses &amp; free verse</h2>
+    <div class="poems-grid" id="poemsGrid"></div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section id="articles">
+  <div class="container">
+    <p class="section-label">// 04 — Writing</p>
+    <h2 class="section-title">Essays &amp; articles</h2>
+    <div class="articles-list">
+      <div class="article-row">
+        <div class="article-num">01</div>
+        <div>
+          <p class="article-title">Nahi jaana par jaana padega</p>
+          <p class="article-snippet">A LinkedIn reflection on transitions — the strange bitterness and sweetness of leaving places and people you've grown into. Written from the middle of a move, honest and unpolished in the best way.</p>
+          <span class="article-tag tag-reflect">Reflection</span>
+        </div>
+      </div>
+      <div class="article-row">
+        <div class="article-num">02</div>
+        <div>
+          <p class="article-title">A Memorable Journey: Youth Parliament</p>
+          <p class="article-snippet">What it felt like to step into a debate chamber as a first-timer, mid-chaos of 11th grade. On teamwork, nerves, and the specific pride of doing something hard you hadn't done before.</p>
+          <span class="article-tag tag-essay">Personal Essay</span>
+        </div>
+      </div>
+      <div class="article-row">
+        <div class="article-num">03</div>
+        <div>
+          <p class="article-title">Prepared, Not Scared</p>
+          <p class="article-snippet">An argument for the quiet power of preparation — not cramming, but genuinely readying yourself for the mess of life. From exams to unexpected emotions to last-minute trips, why being ready changes everything.</p>
+          <span class="article-tag tag-essay">Essay</span>
+        </div>
+      </div>
+      <div class="article-row">
+        <div class="article-num">04</div>
+        <div>
+          <p class="article-title">Dowry: An Identity for a Married Woman</p>
+          <p class="article-snippet">A sharp, personal commentary on the dowry system — written as a Rajasthani who has watched this play out in real families. Examines the Dowry Prohibition Act of 1961 and why awareness still hasn't translated into change.</p>
+          <span class="article-tag tag-social">Socio-Political</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs">
+  <div class="container">
+    <p class="section-label">// 05 — Certifications</p>
+    <h2 class="section-title">Credentials</h2>
+    <div class="certs-grid">
+      <div class="cert-card">
+        <p class="cert-issuer">HubSpot Academy</p>
+        <p class="cert-name">SEO Certification</p>
+        <p class="cert-year">2026 — In Progress</p>
+      </div>
+      <div class="cert-card">
+        <p class="cert-issuer">TCS iON</p>
+        <p class="cert-name">Email Etiquette Certification</p>
+        <p class="cert-year">May 2026 · ID: 66785-32210854-1016</p>
+      </div>
+      <div class="cert-card">
+        <p class="cert-issuer">TCS iON</p>
+        <p class="cert-name">Presentation Skills Professional</p>
+        <p class="cert-year">May 2026</p>
+      </div>
+      <div class="cert-card">
+        <p class="cert-issuer">IIT Madras</p>
+        <p class="cert-name">Data Science &amp; AI — Foundational Track</p>
+        <p class="cert-year">Oct – Dec 2024</p>
+      </div>
+      <div class="cert-card">
+        <p class="cert-issuer">Red FM 93.5</p>
+        <p class="cert-name">Certificate of Appreciation — On-Air Excellence</p>
+        <p class="cert-year">2024 &amp; 2025</p>
+      </div>
+      <div class="cert-card">
+        <p class="cert-issuer">APS Academic Council</p>
+        <p class="cert-name">Youth Parliament — Exemplary Performance</p>
+        <p class="cert-year">2025–2026</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label">// 06 — Contact</p>
+    <h2 class="section-title">Let's work together</h2>
+    <p style="font-style:italic;opacity:0.65;max-width:480px;margin:0 auto;font-size:15px;line-height:1.7;">I'm actively looking for content writing internships. If you like what you've read, I'd love to hear from you.</p>
+    <div class="contact-links">
+      <a href="mailto:tanisharanawat57@gmail.com" class="contact-link">tanisharanawat57@gmail.com</a>
+      <a href="https://linkedin.com/in/tanisha-ranawat-019b6a354/" class="contact-link" target="_blank">LinkedIn Profile</a>
+      <a href="tel:+917037690170" class="contact-link">+91 70376 90170</a>
+    </div>
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;opacity:0.25;margin-top:60px;">© 2026 TANISHA RANAWAT — ALL WORDS ORIGINAL</p>
+  </div>
+</section>
+
+<!-- POEM MODAL -->
+<div id="poem-modal">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <p class="modal-theme" id="modal-theme"></p>
+    <h2 class="modal-title" id="modal-title"></h2>
+    <div class="modal-poem" id="modal-poem"></div>
+  </div>
+</div>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 6 + 'px';
+  cursor.style.top = e.clientY - 6 + 'px';
+});
+
+// POEMS DATA
+const poems = [
+  {
+    title: "Crinkled Leaf",
+    type: "Free Verse",
+    theme: "identity",
+    color: "#6b8f71",
+    charColor: "#2d5a35",
+    excerpt: "Crinkled leaf or a lively one?\nCrinkled by thoughts and experiences,\nUnloved by the roots,\nIgnored by the surroundings.",
+    full: `Crinkled leaf or a lively one?
+Crinkled by thoughts and experiences,
+Unloved by the roots,
+Ignored by the surroundings.
+
+The fear still lingers,
+Yet persistence prevails.
+Falling into pieces..., but of different sizes,
+Each beautiful in its own way.
+
+Yet the world refuses to accept the experienced leaf.
+It wonders what could have happened if it were a lively one...
+Lovable,
+And
+Praised.
+
+Yet experience makes it easier,
+And worse,
+In its own ways.`
+  },
+  {
+    title: "The Bell Rang",
+    type: "Lyric Poem",
+    theme: "longing",
+    color: "#c9935a",
+    charColor: "#7a4f1a",
+    excerpt: "Those caramel colours melting into mine.\nScared to lose it... or win it,\nI placed my hand over my heart.",
+    full: `The corridor chaos and my focused glance,
+Those caramel colours melting into mine.
+Scared to lose it... or win it,
+I placed my hand over my heart.
+
+I saw the caramels flooding the path
+Their sweetness made me smile,
+And giggle.
+And I thought,
+Why not give it a chance?
+
+But the colours began to fade.
+I doubted my choice,
+A soft ache blooming in my chest.
+
+Then a sweet aroma arose,
+Carrying the taste from my mind
+To my heart.
+It eased the tension.
+It eased the doubt.
+
+And once again, together,
+I thought
+Why not give it a chance?`
+  },
+  {
+    title: "Unfiltered Escapism",
+    type: "Narrative Poem",
+    theme: "friendship / farewell",
+    color: "#d4607a",
+    charColor: "#8b2040",
+    excerpt: "From late-night strolls to\nEarly morning runs.\nFrom stealing unripe mangoes\nTo almost hitting someone with a stone.",
+    full: `Talking through eyes,
+Laughing with heart,
+Crying by expressions,
+Confessing through emotion.
+
+Sometimes, I find comfort in chaos,
+Understanding in one,
+And bitterness in others.
+The essence and flavouring of friendship
+Mixed with missed understandings.
+
+With a simple talk,
+And with a small walk,
+I define this as a friendship.
+
+From late-night strolls to
+Early morning runs.
+From stealing unripe mangoes
+To almost hitting someone with a stone.
+From sipping fruit juice from those three shops
+To eating hot momos by the footpath.
+From taking permission from their parents
+To getting scolded by them.
+From going to a temple together
+To getting ready for functions.
+
+The chaos was inevitable
+Until
+The last from and to occurred.
+
+From walking and laughing like a maniac in the cantonment roads together
+To saying goodbye to each other.
+
+And the escapism escaped...`
+  },
+  {
+    title: "Like a Little Child",
+    type: "Contemplative Verse",
+    theme: "memory / loss",
+    color: "#9b7fb6",
+    charColor: "#5a3080",
+    excerpt: "The memories hit,\nThey ran up to me like a small child,\nTugged onto my clothes,\nAnd after I was lost, it ran away.",
+    full: `Like a little child,
+While being away from reality,
+Oblivious to all the thoughts,
+But obvious of my choices.
+
+The memories hit,
+They ran up to me like a small child,
+Tugged onto my clothes,
+And after I was lost,
+It ran away like a small child.
+
+Precocious feeling of being stuck,
+But reality struck
+It's all lost and gone,
+The realization that dawned upon.
+
+Looked out of the window of the car,
+And thought of everything that went bizarre.
+
+Now, is this reality or the penalty?
+Will the memories come back again,
+Running up to me
+Like a small child?`
+  },
+  {
+    title: "The Fabricated Lights",
+    type: "Confessional Verse",
+    theme: "resilience",
+    color: "#7893b0",
+    charColor: "#2d4f72",
+    excerpt: "when I pointed to the drenching coat\nhanging on the back of my door,\na shield for them,\neven when it was all I had.",
+    full: `Call it what you want, they said,
+when I pointed to the drenching coat
+hanging on the back of my door,
+a shield for them,
+even when it was all I had.
+
+I pushed through the crowd,
+cursing the drops, cursing the path,
+forgetting the mess of cloth
+I had been carrying all along.
+
+Yet the fabric of that raincoat,
+soaked, heavy, imperfect,
+still covered,
+still endured.
+
+Let the shine, shine,
+through the seams and stains.
+
+And now,
+it no longer feels
+like I am standing
+before a shrine.`
+  },
+  {
+    title: "Pendulum of Birds",
+    type: "Extended Metaphor",
+    theme: "growing up / grief",
+    color: "#c9935a",
+    charColor: "#7a4f1a",
+    excerpt: "The blue one goes with my grandmother,\ntaking the warmth and love,\nand closing the shower of comfort.",
+    full: `I've taken the steps.
+I've stepped on a branch,
+making it crack with a sound,
+so now
+I've woken up the birds.
+
+The birds are flying in every direction now.
+I see them fly away one by one.
+
+The blue one goes with my grandmother,
+taking the warmth and love,
+and closing the shower of comfort.
+
+The yellow one goes with my friends,
+taking away trust, belief,
+and the environment where I used to be my crazy self.
+
+Now the brown one flew away,
+taking my carelessness away,
+the innocence,
+and at last, my unawareness.
+
+I grew sad.
+Grief came rolling out of the bushes,
+hugging my every inch, but then
+
+Then another flock arrived.
+They did not sing.
+One left kindness.
+Another, belief and awareness.
+
+Then the last bird came flying
+and sat longer than it should have,
+longer than it ever had.`
+  },
+  {
+    title: "Memories on Bricks",
+    type: "Nostalgic Verse",
+    theme: "home / time",
+    color: "#6b8f71",
+    charColor: "#2d5a35",
+    excerpt: "A porch with warm lights,\ntangling the laughter stuck in air,\nand a mother's care.",
+    full: `Wind that makes the curtains sway,
+TV that flickers when my fav cartoon has something to say.
+Cameras that weren't so fancy,
+Opinions that weren't so chancy.
+
+A porch with warm lights,
+tangling the laughter stuck in air,
+and a mother's care.
+
+Bricks heavy with the dust of memories,
+Photos turned to showpieces,
+hanging like framed braveries.
+
+The tick-tock sound the clock makes,
+and the ends that never get remakes.`
+  },
+  {
+    title: "Meeting My Younger Self",
+    type: "Prose Poem",
+    theme: "self / time",
+    color: "#d4607a",
+    charColor: "#8b2040",
+    excerpt: "She was happy and excited.\nI was gloomy and silent.\nYet, she caressed my cheeks and told me to let go of things that are hard to hold on to.",
+    full: `I met my younger self for coffee today.
+I was late.
+She was early.
+
+We didn't have any coffee, as she wanted to take a walk in nature, sipping on her favorite fruit juice. I nodded and walked alongside her, her footsteps small yet so joyful.
+
+I wore my hair open with my favorite PJs,
+And she wore her favorite skirt with two little braids.
+
+She was happy and excited.
+I was gloomy and silent.
+
+Yet, she caressed my cheeks and told me to let go of things that are hard to hold on to.
+
+She asked me about everything.
+I simply assured her to go with the flow and reminded her to learn the things that had been put in the dark, forgotten.
+
+I asked about her situation, and she glowed under the sunrays falling on her skin, telling me it was wonderful.
+
+She wanted to know about my friends, and I told her they are some of the best creatures I've met.
+
+Then, she inquired about the family.
+I told her we lost someone special, but everyone is happy now, living their lives and progressing at their own pace.
+
+At the end, she asked if I was okay.
+My voice cracking, I told her, "I am."
+
+She smiled.
+Then, she waved her hand, saying goodbye.
+
+I stood there, frozen in my place, waving at her, smiling.
+
+Maybe we'll meet again in 15 years.`
+  },
+  {
+    title: "LOST",
+    type: "Philosophical Verse",
+    theme: "connection / identity",
+    color: "#9b7fb6",
+    charColor: "#5a3080",
+    excerpt: "Did they lose the version of that person they first met?\nDid they lose them to someone else?\nDid they lose them because they didn't hold on tightly enough?",
+    full: `When someone says they've lost someone,
+what do they really mean?
+
+Did they lose the version of that person they first met?
+Did they lose them to someone else?
+Did they lose them because they didn't hold on tightly enough?
+Did they lose them because the year changed
+and life demanded change with it?
+Did they lose them because the versions they loved didn't survive reality?
+Or did they lose themselves trying to keep that person in their life?
+
+So is it losing or gaining?
+The person who loses decides.
+
+Sometimes, in consuming too much of others,
+you end up losing yourself.`
+  },
+  {
+    title: "Swatches of Ink",
+    type: "Chain Verse",
+    theme: "ambition / constraint",
+    color: "#7893b0",
+    charColor: "#2d4f72",
+    excerpt: "Stained glass with stained cloth,\nStained cloth with stained ink,\nStained ink with broken refill,\nBroken refill with shattered trust.",
+    full: `Stained glass with stained cloth,
+Stained cloth with stained ink,
+Stained ink with broken refill,
+Broken refill with shattered trust,
+Shattered trust with caged dreams,
+Caged dreams with big ambitions,
+Big ambitions with a used-up mind,
+A used-up mind with metal doors,
+Metal doors with no key to unlock.`
+  },
+  {
+    title: "Hope is like a Soap",
+    type: "Prose Fragment",
+    theme: "hope",
+    color: "#c9935a",
+    charColor: "#7a4f1a",
+    excerpt: "THERE ARE MOMENTS WHEN WE HOLD ONTO IT TOO TIGHTLY, AND SOMETIMES WE LET GO, WASHING OUR HANDS AS IF WE COULD GET RID OF THE SOAPY TEXTURE AND THE GRIEF ALONG WITH IT.",
+    full: `I THINK HOPE IS WHAT WE NEED, BUT IT KEEPS SLIPPING AWAY.
+
+THERE ARE MOMENTS WHEN WE HOLD ONTO IT TOO TIGHTLY, AND SOMETIMES WE LET GO, WASHING OUR HANDS AS IF WE COULD GET RID OF THE SOAPY TEXTURE AND THE GRIEF ALONG WITH IT.`
+  },
+  {
+    title: "The White Crack",
+    type: "Introspective Verse",
+    theme: "duality / self",
+    color: "#6b8f71",
+    charColor: "#2d5a35",
+    excerpt: "Left and right side of the crack\nThey fight\nThey fiddle\nBut who's in the middle\nIt's Me?",
+    full: `Left and right side of the crack
+They fight
+They fiddle
+But who's in the middle
+It's Me?
+
+The really "cracked" me
+The really "calm" Me
+The really just "me"
+
+Well maybe I'm just the ugliness held between those two sides
+Well maybe I'm just stuck now
+Well maybe I'm just "me" now`
+  }
+];
+
+// PIXEL CHARACTERS (SVG inline, different for each mood)
+function getPixelChar(color, charColor) {
+  return `<svg width="24" height="28" viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
+    <!-- head -->
+    <rect x="8" y="0" width="8" height="8" fill="${charColor}"/>
+    <!-- eyes -->
+    <rect x="10" y="2" width="2" height="2" fill="${color}"/>
+    <rect x="14" y="2" width="2" height="2" fill="${color}"/>
+    <!-- mouth -->
+    <rect x="10" y="6" width="4" height="1" fill="${color}"/>
+    <!-- body -->
+    <rect x="6" y="8" width="12" height="10" fill="${charColor}"/>
+    <!-- arms -->
+    <rect x="2" y="8" width="4" height="4" fill="${charColor}"/>
+    <rect x="18" y="8" width="4" height="4" fill="${charColor}"/>
+    <!-- legs -->
+    <rect x="6" y="18" width="4" height="10" fill="${charColor}"/>
+    <rect x="14" y="18" width="4" height="10" fill="${charColor}"/>
+  </svg>`;
+}
+
+// RENDER POEM CARDS
+const grid = document.getElementById('poemsGrid');
+poems.forEach((poem, i) => {
+  const card = document.createElement('div');
+  card.className = 'poem-card';
+  card.style.transitionDelay = (i % 2 * 0.15) + 's';
+  card.innerHTML = `
+    <div class="pixel-char char-animate">${getPixelChar(poem.color, poem.charColor)}</div>
+    <div class="thought-bubble">${poem.type}</div>
+    <p class="poem-theme">
+      <span class="poem-theme-dot" style="background:${poem.color}"></span>
+      ${poem.theme}
+    </p>
+    <h3 class="poem-title">${poem.title}</h3>
+    <p class="poem-excerpt">${poem.excerpt}</p>
+    <button class="poem-read-btn" onclick="openPoem(${i})">Read full poem →</button>
+  `;
+  grid.appendChild(card);
+});
+
+// OPEN/CLOSE MODAL
+function openPoem(i) {
+  const p = poems[i];
+  document.getElementById('modal-theme').textContent = p.type + ' · ' + p.theme;
+  document.getElementById('modal-title').textContent = p.title;
+  document.getElementById('modal-poem').textContent = p.full;
+  document.getElementById('poem-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('poem-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('poem-modal').addEventListener('click', e => {
+  if(e.target === document.getElementById('poem-modal')) closeModal();
+});
+
+// PIXEL BIRDS
+function makeBird(color) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('width','16'); svg.setAttribute('height','10');
+  svg.setAttribute('viewBox','0 0 16 10');
+  svg.style.imageRendering = 'pixelated';
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d','M0 5 L4 2 L8 5 L12 2 L16 5');
+  path.setAttribute('stroke', color);
+  path.setAttribute('stroke-width','2');
+  path.setAttribute('fill','none');
+  svg.appendChild(path);
+  return svg;
+}
+
+const birdColors = ['#c9935a','#d4607a','#9b7fb6','#6b8f71','#7893b0'];
+const birdContainer = document.getElementById('birdContainer');
+function spawnBird() {
+  const bird = document.createElement('div');
+  bird.className = 'pbird';
+  const y = Math.random() * 70 + 10;
+  const dur = Math.random() * 12 + 10;
+  const delay = Math.random() * 5;
+  const color = birdColors[Math.floor(Math.random() * birdColors.length)];
+  bird.style.top = y + 'vh';
+  bird.style.animationDuration = dur + 's';
+  bird.style.animationDelay = delay + 's';
+  bird.style.opacity = Math.random() * 0.4 + 0.3;
+  const birdSVG = makeBird(color);
+  bird.appendChild(birdSVG);
+  birdContainer.appendChild(bird);
+  setTimeout(() => bird.remove(), (dur + delay) * 1000 + 500);
+}
+setInterval(spawnBird, 1800);
+for(let i=0;i<4;i++) setTimeout(spawnBird, i*600);
+
+// SCROLL REVEAL
+const revealEls = document.querySelectorAll('.poem-card, .exp-item, .article-row, .cert-card');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => observer.observe(el));
+
+// WEB AUDIO AMBIENT MUSIC
+let audioCtx = null;
+let musicOn = false;
+let nodes = [];
+
+function startAmbience() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const master = audioCtx.createGain();
+  master.gain.value = 0.08;
+  master.connect(audioCtx.destination);
+
+  // Soft pad chords: Cmaj7 voicing
+  const freqs = [261.63, 329.63, 392.00, 493.88, 523.25];
+  freqs.forEach((f, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = f;
+    gain.gain.value = 0.18;
+    osc.connect(gain);
+    gain.connect(master);
+    osc.start();
+    nodes.push(osc);
+  });
+
+  // Subtle noise texture
+  const bufSize = audioCtx.sampleRate * 2;
+  const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1) * 0.02;
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+  const nGain = audioCtx.createGain();
+  nGain.gain.value = 0.06;
+  src.connect(nGain);
+  nGain.connect(master);
+  src.start();
+  nodes.push(src);
+}
+
+function stopAmbience() {
+  if(audioCtx) {
+    nodes.forEach(n => { try { n.stop(); } catch(e){} });
+    nodes = [];
+    audioCtx.close();
+    audioCtx = null;
+  }
+}
+
+function toggleMusic() {
+  musicOn = !musicOn;
+  const btn = document.getElementById('music-btn');
+  if(musicOn) {
+    startAmbience();
+    btn.textContent = '♪ AMBIENCE ON';
+    btn.style.background = 'var(--rose)';
+  } else {
+    stopAmbience();
+    btn.textContent = '♪ AMBIENCE OFF';
+    btn.style.background = 'var(--ink)';
+  }
+}
+</script>
+</body>
+</html>
