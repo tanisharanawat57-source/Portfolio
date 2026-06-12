@@ -414,7 +414,9 @@
     padding: 24px 0; border-bottom: 1px solid rgba(26,10,46,0.08);
     opacity: 0; transform: translateX(-20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
+    cursor: pointer;
   }
+  .article-row:hover .article-title { color: var(--rose); }
   .article-row.visible { opacity: 1; transform: none; }
   .article-num {
     font-family: 'Playfair Display', serif;
@@ -426,6 +428,7 @@
     font-family: 'Playfair Display', serif;
     font-size: 20px; font-weight: 700;
     color: var(--ink); margin-bottom: 8px;
+    transition: color 0.2s ease;
   }
   .article-snippet {
     font-size: 14px; line-height: 1.7;
@@ -515,22 +518,6 @@
     from { transform: translateX(-80px); }
     to { transform: translateX(110vw); }
   }
-  @keyframes float {
-    0%,100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-  }
-  @keyframes pixelPulse {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-  @keyframes waveText {
-    0%,100% { transform: skewX(0deg); }
-    25% { transform: skewX(-1deg); }
-    75% { transform: skewX(1deg); }
-  }
-
-  /* PIXEL CHARACTER SVGs inline */
-  .char-animate { animation: float 3s ease-in-out infinite; }
 
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; }
@@ -554,7 +541,7 @@
 
 <div id="cursor"></div>
 
-<!-- AMBIENT MUSIC (Web Audio API — soft lofi generative) -->
+<!-- AMBIENT MUSIC -->
 <button id="music-btn" onclick="toggleMusic()">♪ AMBIENCE OFF</button>
 
 <nav>
@@ -571,10 +558,7 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-bg-grid"></div>
-
-  <!-- PIXEL BIRDS FLOATING -->
   <div class="pixel-birds" id="birdContainer"></div>
-
   <div class="hero-content">
     <p class="hero-eyebrow">✦ Content Writer · Poet · Scriptwriter</p>
     <h1 class="hero-name">Tanisha<br><em>Ranawat</em></h1>
@@ -667,11 +651,11 @@
         <div>
           <p class="exp-role">Digital Content Creator &amp; Essay Writer</p>
           <p class="exp-org">Independent Portfolio</p>
-          <p class="exp-desc">Author and publish original analytical essays and poetry on professional platforms. Produce SEO-conscious, research-backed content tailored to platform audiences across long-form and short-form formats. Published works include "Prepared, Not Scared" — an essay on human resilience.</p>
+          <p class="exp-desc">Author and publish original analytical essays and poetry on professional platforms. Produce SEO-conscious, research-backed content tailored to platform audiences across long-form and short-form formats.</p>
         </div>
       </div>
       <div class="exp-item">
-        <div class="exp-date">Aug 2025 – Mar 2026</div>
+        <div class="exp-date">May 2024 – Present</div>
         <div>
           <p class="exp-role">Parliamentarian</p>
           <p class="exp-org">Youth Parliament Forum — APS Clement Town Academic Council</p>
@@ -696,40 +680,7 @@
   <div class="container">
     <p class="section-label">// 04 — Writing</p>
     <h2 class="section-title">Essays &amp; articles</h2>
-    <div class="articles-list">
-      <div class="article-row">
-        <div class="article-num">01</div>
-        <div>
-          <p class="article-title">Nahi jaana par jaana padega</p>
-          <p class="article-snippet">A LinkedIn reflection on transitions — the strange bitterness and sweetness of leaving places and people you've grown into. Written from the middle of a move, honest and unpolished in the best way.</p>
-          <span class="article-tag tag-reflect">Reflection</span>
-        </div>
-      </div>
-      <div class="article-row">
-        <div class="article-num">02</div>
-        <div>
-          <p class="article-title">A Memorable Journey: Youth Parliament</p>
-          <p class="article-snippet">What it felt like to step into a debate chamber as a first-timer, mid-chaos of 11th grade. On teamwork, nerves, and the specific pride of doing something hard you hadn't done before.</p>
-          <span class="article-tag tag-essay">Personal Essay</span>
-        </div>
-      </div>
-      <div class="article-row">
-        <div class="article-num">03</div>
-        <div>
-          <p class="article-title">Prepared, Not Scared</p>
-          <p class="article-snippet">An argument for the quiet power of preparation — not cramming, but genuinely readying yourself for the mess of life. From exams to unexpected emotions to last-minute trips, why being ready changes everything.</p>
-          <span class="article-tag tag-essay">Essay</span>
-        </div>
-      </div>
-      <div class="article-row">
-        <div class="article-num">04</div>
-        <div>
-          <p class="article-title">Dowry: An Identity for a Married Woman</p>
-          <p class="article-snippet">A sharp, personal commentary on the dowry system — written as a Rajasthani who has watched this play out in real families. Examines the Dowry Prohibition Act of 1961 and why awareness still hasn't translated into change.</p>
-          <span class="article-tag tag-social">Socio-Political</span>
-        </div>
-      </div>
-    </div>
+    <div class="articles-list" id="articlesList"></div>
   </div>
 </section>
 
@@ -788,7 +739,7 @@
   </div>
 </section>
 
-<!-- POEM MODAL -->
+<!-- MAIN MODAL -->
 <div id="poem-modal">
   <div class="modal-inner">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -815,25 +766,7 @@ const poems = [
     color: "#6b8f71",
     charColor: "#2d5a35",
     excerpt: "Crinkled leaf or a lively one?\nCrinkled by thoughts and experiences,\nUnloved by the roots,\nIgnored by the surroundings.",
-    full: `Crinkled leaf or a lively one?
-Crinkled by thoughts and experiences,
-Unloved by the roots,
-Ignored by the surroundings.
-
-The fear still lingers,
-Yet persistence prevails.
-Falling into pieces..., but of different sizes,
-Each beautiful in its own way.
-
-Yet the world refuses to accept the experienced leaf.
-It wonders what could have happened if it were a lively one...
-Lovable,
-And
-Praised.
-
-Yet experience makes it easier,
-And worse,
-In its own ways.`
+    full: `Crinkled leaf or a lively one?\nCrinkled by thoughts and experiences,\nUnloved by the roots,\nIgnored by the surroundings.\n\nThe fear still lingers,\nYet persistence prevails.\nFalling into pieces..., but of different sizes,\nEach beautiful in its own way.\n\nYet the world refuses to accept the experienced leaf.\nIt wonders what could have happened if it were a lively one...\nLovable,\nAnd\nPraised.\n\nYet experience makes it easier,\nAnd worse,\nIn its own ways.`
   },
   {
     title: "The Bell Rang",
@@ -842,30 +775,7 @@ In its own ways.`
     color: "#c9935a",
     charColor: "#7a4f1a",
     excerpt: "Those caramel colours melting into mine.\nScared to lose it... or win it,\nI placed my hand over my heart.",
-    full: `The corridor chaos and my focused glance,
-Those caramel colours melting into mine.
-Scared to lose it... or win it,
-I placed my hand over my heart.
-
-I saw the caramels flooding the path
-Their sweetness made me smile,
-And giggle.
-And I thought,
-Why not give it a chance?
-
-But the colours began to fade.
-I doubted my choice,
-A soft ache blooming in my chest.
-
-Then a sweet aroma arose,
-Carrying the taste from my mind
-To my heart.
-It eased the tension.
-It eased the doubt.
-
-And once again, together,
-I thought
-Why not give it a chance?`
+    full: `The corridor chaos and my focused glance,\nThose caramel colours melting into mine.\nScared to lose it... or win it,\nI placed my hand over my heart.\n\nI saw the caramels flooding the path\nTheir sweetness made me smile,\nAnd giggle.\nAnd I thought,\nWhy not give it a chance?\n\nBut the colours began to fade.\nI doubted my choice,\nA soft ache blooming in my chest.\n\nThen a sweet aroma arose,\nCarrying the taste from my mind\nTo my heart.\nIt eased the tension.\nIt eased the doubt.\n\nAnd once again, together,\nI thought\nWhy not give it a chance?`
   },
   {
     title: "Unfiltered Escapism",
@@ -874,40 +784,7 @@ Why not give it a chance?`
     color: "#d4607a",
     charColor: "#8b2040",
     excerpt: "From late-night strolls to\nEarly morning runs.\nFrom stealing unripe mangoes\nTo almost hitting someone with a stone.",
-    full: `Talking through eyes,
-Laughing with heart,
-Crying by expressions,
-Confessing through emotion.
-
-Sometimes, I find comfort in chaos,
-Understanding in one,
-And bitterness in others.
-The essence and flavouring of friendship
-Mixed with missed understandings.
-
-With a simple talk,
-And with a small walk,
-I define this as a friendship.
-
-From late-night strolls to
-Early morning runs.
-From stealing unripe mangoes
-To almost hitting someone with a stone.
-From sipping fruit juice from those three shops
-To eating hot momos by the footpath.
-From taking permission from their parents
-To getting scolded by them.
-From going to a temple together
-To getting ready for functions.
-
-The chaos was inevitable
-Until
-The last from and to occurred.
-
-From walking and laughing like a maniac in the cantonment roads together
-To saying goodbye to each other.
-
-And the escapism escaped...`
+    full: `Talking through eyes,\nLaughing with heart,\nCrying by expressions,\nConfessing through emotion.\n\nSometimes, I find comfort in chaos,\nUnderstanding in one,\nAnd bitterness in others.\nThe essence and flavouring of friendship\nMixed with missed understandings.\n\nWith a simple talk,\nAnd with a small walk,\nI define this as a friendship.\n\nFrom late-night strolls to\nEarly morning runs.\nFrom stealing unripe mangoes\nTo almost hitting someone with a stone.\nFrom sipping fruit juice from those three shops\nTo eating hot momos by the footpath.\nFrom taking permission from their parents\nTo getting scolded by them.\nFrom going to a temple together\nTo getting ready for functions.\n\nThe chaos was inevitable\nUntil\nThe last from and to occurred.\n\nFrom walking and laughing like a maniac in the cantonment roads together\nTo saying goodbye to each other.\n\nAnd the escapism escaped...`
   },
   {
     title: "Like a Little Child",
@@ -916,29 +793,7 @@ And the escapism escaped...`
     color: "#9b7fb6",
     charColor: "#5a3080",
     excerpt: "The memories hit,\nThey ran up to me like a small child,\nTugged onto my clothes,\nAnd after I was lost, it ran away.",
-    full: `Like a little child,
-While being away from reality,
-Oblivious to all the thoughts,
-But obvious of my choices.
-
-The memories hit,
-They ran up to me like a small child,
-Tugged onto my clothes,
-And after I was lost,
-It ran away like a small child.
-
-Precocious feeling of being stuck,
-But reality struck
-It's all lost and gone,
-The realization that dawned upon.
-
-Looked out of the window of the car,
-And thought of everything that went bizarre.
-
-Now, is this reality or the penalty?
-Will the memories come back again,
-Running up to me
-Like a small child?`
+    full: `Like a little child,\nWhile being away from reality,\nOblivious to all the thoughts,\nBut obvious of my choices.\n\nThe memories hit,\nThey ran up to me like a small child,\nTugged onto my clothes,\nAnd after I was lost,\nIt ran away like a small child.\n\nPrecocious feeling of being stuck,\nBut reality struck\nIt's all lost and gone,\nThe realization that dawned upon.\n\nLooked out of the window of the car,\nAnd thought of everything that went bizarre.\n\nNow, is this reality or the penalty?\nWill the memories come back again,\nRunning up to me\nLike a small child?`
   },
   {
     title: "The Fabricated Lights",
@@ -947,29 +802,7 @@ Like a small child?`
     color: "#7893b0",
     charColor: "#2d4f72",
     excerpt: "when I pointed to the drenching coat\nhanging on the back of my door,\na shield for them,\neven when it was all I had.",
-    full: `Call it what you want, they said,
-when I pointed to the drenching coat
-hanging on the back of my door,
-a shield for them,
-even when it was all I had.
-
-I pushed through the crowd,
-cursing the drops, cursing the path,
-forgetting the mess of cloth
-I had been carrying all along.
-
-Yet the fabric of that raincoat,
-soaked, heavy, imperfect,
-still covered,
-still endured.
-
-Let the shine, shine,
-through the seams and stains.
-
-And now,
-it no longer feels
-like I am standing
-before a shrine.`
+    full: `Call it what you want, they said,\nwhen I pointed to the drenching coat\nhanging on the back of my door,\na shield for them,\neven when it was all I had.\n\nI pushed through the crowd,\ncursing the drops, cursing the path,\nforgetting the mess of cloth\nI had been carrying all along.\n\nYet the fabric of that raincoat,\nsoaked, heavy, imperfect,\nstill covered,\nstill endured.\n\nLet the shine, shine,\nthrough the seams and stains.\n\nAnd now,\nit no longer feels\nlike I am standing\nbefore a shrine.`
   },
   {
     title: "Pendulum of Birds",
@@ -978,40 +811,7 @@ before a shrine.`
     color: "#c9935a",
     charColor: "#7a4f1a",
     excerpt: "The blue one goes with my grandmother,\ntaking the warmth and love,\nand closing the shower of comfort.",
-    full: `I've taken the steps.
-I've stepped on a branch,
-making it crack with a sound,
-so now
-I've woken up the birds.
-
-The birds are flying in every direction now.
-I see them fly away one by one.
-
-The blue one goes with my grandmother,
-taking the warmth and love,
-and closing the shower of comfort.
-
-The yellow one goes with my friends,
-taking away trust, belief,
-and the environment where I used to be my crazy self.
-
-Now the brown one flew away,
-taking my carelessness away,
-the innocence,
-and at last, my unawareness.
-
-I grew sad.
-Grief came rolling out of the bushes,
-hugging my every inch, but then
-
-Then another flock arrived.
-They did not sing.
-One left kindness.
-Another, belief and awareness.
-
-Then the last bird came flying
-and sat longer than it should have,
-longer than it ever had.`
+    full: `I've taken the steps.\nI've stepped on a branch,\nmaking it crack with a sound,\nso now\nI've woken up the birds.\n\nThe birds are flying in every direction now.\nI see them fly away one by one.\n\nThe blue one goes with my grandmother,\ntaking the warmth and love,\nand closing the shower of comfort.\n\nThe yellow one goes with my friends,\ntaking away trust, belief,\nand the environment where I used to be my crazy self.\n\nNow the brown one flew away,\ntaking my carelessness away,\nthe innocence,\nand at last, my unawareness.\n\nI grew sad.\nGrief came rolling out of the bushes,\nhugging my every inch, but then\n\nThen another flock arrived.\nThey did not sing.\nOne left kindness.\nAnother, belief and awareness.\n\nThen the last bird came flying\nand sat longer than it should have,\nlonger than it ever had.`
   },
   {
     title: "Memories on Bricks",
@@ -1020,21 +820,7 @@ longer than it ever had.`
     color: "#6b8f71",
     charColor: "#2d5a35",
     excerpt: "A porch with warm lights,\ntangling the laughter stuck in air,\nand a mother's care.",
-    full: `Wind that makes the curtains sway,
-TV that flickers when my fav cartoon has something to say.
-Cameras that weren't so fancy,
-Opinions that weren't so chancy.
-
-A porch with warm lights,
-tangling the laughter stuck in air,
-and a mother's care.
-
-Bricks heavy with the dust of memories,
-Photos turned to showpieces,
-hanging like framed braveries.
-
-The tick-tock sound the clock makes,
-and the ends that never get remakes.`
+    full: `Wind that makes the curtains sway,\nTV that flickers when my fav cartoon has something to say.\nCameras that weren't so fancy,\nOpinions that weren't so chancy.\n\nA porch with warm lights,\ntangling the laughter stuck in air,\nand a mother's care.\n\nBricks heavy with the dust of memories,\nPhotos turned to showpieces,\nhanging like framed braveries.\n\nThe tick-tock sound the clock makes,\nand the ends that never get remakes.`
   },
   {
     title: "Meeting My Younger Self",
@@ -1043,39 +829,7 @@ and the ends that never get remakes.`
     color: "#d4607a",
     charColor: "#8b2040",
     excerpt: "She was happy and excited.\nI was gloomy and silent.\nYet, she caressed my cheeks and told me to let go of things that are hard to hold on to.",
-    full: `I met my younger self for coffee today.
-I was late.
-She was early.
-
-We didn't have any coffee, as she wanted to take a walk in nature, sipping on her favorite fruit juice. I nodded and walked alongside her, her footsteps small yet so joyful.
-
-I wore my hair open with my favorite PJs,
-And she wore her favorite skirt with two little braids.
-
-She was happy and excited.
-I was gloomy and silent.
-
-Yet, she caressed my cheeks and told me to let go of things that are hard to hold on to.
-
-She asked me about everything.
-I simply assured her to go with the flow and reminded her to learn the things that had been put in the dark, forgotten.
-
-I asked about her situation, and she glowed under the sunrays falling on her skin, telling me it was wonderful.
-
-She wanted to know about my friends, and I told her they are some of the best creatures I've met.
-
-Then, she inquired about the family.
-I told her we lost someone special, but everyone is happy now, living their lives and progressing at their own pace.
-
-At the end, she asked if I was okay.
-My voice cracking, I told her, "I am."
-
-She smiled.
-Then, she waved her hand, saying goodbye.
-
-I stood there, frozen in my place, waving at her, smiling.
-
-Maybe we'll meet again in 15 years.`
+    full: `I met my younger self for coffee today.\nI was late.\nShe was early.\n\nWe didn't have any coffee, as she wanted to take a walk in nature, sipping on her favorite fruit juice. I nodded and walked alongside her, her footsteps small yet so joyful.\n\nI wore my hair open with my favorite PJs,\nAnd she wore her favorite skirt with two little braids.\n\nShe was happy and excited.\nI was gloomy and silent.\n\nYet, she caressed my cheeks and told me to let go of things that are hard to hold on to.\n\nShe asked me about everything.\nI simply assured her to go with the flow and reminded her to learn the things that had been put in the dark, forgotten.\n\nI asked about her situation, and she glowed under the sunrays falling on her skin, telling me it was wonderful.\n\nShe wanted to know about my friends, and I told her they are some of the best creatures I've met.\n\nThen, she inquired about the family.\nI told her we lost someone special, but everyone is happy now, living their lives and progressing at their own pace.\n\nAt the end, she asked if I was okay.\nMy voice cracking, I told her, "I am."\n\nShe smiled.\nThen, she waved her hand, saying goodbye.\n\nI stood there, frozen in my place, waving at her, smiling.\n\nMaybe we'll meet again in 15 years.`
   },
   {
     title: "LOST",
@@ -1084,22 +838,7 @@ Maybe we'll meet again in 15 years.`
     color: "#9b7fb6",
     charColor: "#5a3080",
     excerpt: "Did they lose the version of that person they first met?\nDid they lose them to someone else?\nDid they lose them because they didn't hold on tightly enough?",
-    full: `When someone says they've lost someone,
-what do they really mean?
-
-Did they lose the version of that person they first met?
-Did they lose them to someone else?
-Did they lose them because they didn't hold on tightly enough?
-Did they lose them because the year changed
-and life demanded change with it?
-Did they lose them because the versions they loved didn't survive reality?
-Or did they lose themselves trying to keep that person in their life?
-
-So is it losing or gaining?
-The person who loses decides.
-
-Sometimes, in consuming too much of others,
-you end up losing yourself.`
+    full: `When someone says they've lost someone,\nwhat do they really mean?\n\nDid they lose the version of that person they first met?\nDid they lose them to someone else?\nDid they lose them because they didn't hold on tightly enough?\nDid they lose them because the year changed\nand life demanded change with it?\nDid they lose them because the versions they loved didn't survive reality?\nOr did they lose themselves trying to keep that person in their life?\n\nSo is it losing or gaining?\nThe person who loses decides.\n\nSometimes, in consuming too much of others,\nyou end up losing yourself.`
   },
   {
     title: "Swatches of Ink",
@@ -1108,15 +847,7 @@ you end up losing yourself.`
     color: "#7893b0",
     charColor: "#2d4f72",
     excerpt: "Stained glass with stained cloth,\nStained cloth with stained ink,\nStained ink with broken refill,\nBroken refill with shattered trust.",
-    full: `Stained glass with stained cloth,
-Stained cloth with stained ink,
-Stained ink with broken refill,
-Broken refill with shattered trust,
-Shattered trust with caged dreams,
-Caged dreams with big ambitions,
-Big ambitions with a used-up mind,
-A used-up mind with metal doors,
-Metal doors with no key to unlock.`
+    full: `Stained glass with stained cloth,\nStained cloth with stained ink,\nStained ink with broken refill,\nBroken refill with shattered trust,\nShattered trust with caged dreams,\nCaged dreams with big ambitions,\nBig ambitions with a used-up mind,\nA used-up mind with metal doors,\nMetal doors with no key to unlock.`
   },
   {
     title: "Hope is like a Soap",
@@ -1125,9 +856,7 @@ Metal doors with no key to unlock.`
     color: "#c9935a",
     charColor: "#7a4f1a",
     excerpt: "THERE ARE MOMENTS WHEN WE HOLD ONTO IT TOO TIGHTLY, AND SOMETIMES WE LET GO, WASHING OUR HANDS AS IF WE COULD GET RID OF THE SOAPY TEXTURE AND THE GRIEF ALONG WITH IT.",
-    full: `I THINK HOPE IS WHAT WE NEED, BUT IT KEEPS SLIPPING AWAY.
-
-THERE ARE MOMENTS WHEN WE HOLD ONTO IT TOO TIGHTLY, AND SOMETIMES WE LET GO, WASHING OUR HANDS AS IF WE COULD GET RID OF THE SOAPY TEXTURE AND THE GRIEF ALONG WITH IT.`
+    full: `I THINK HOPE IS WHAT WE NEED, BUT IT KEEPS SLIPPING AWAY.\n\nTHERE ARE MOMENTS WHEN WE HOLD ONTO IT TOO TIGHTLY, AND SOMETIMES WE LET GO, WASHING OUR HANDS AS IF WE COULD GET RID OF THE SOAPY TEXTURE AND THE GRIEF ALONG WITH IT.`
   },
   {
     title: "The White Crack",
@@ -1136,38 +865,64 @@ THERE ARE MOMENTS WHEN WE HOLD ONTO IT TOO TIGHTLY, AND SOMETIMES WE LET GO, WAS
     color: "#6b8f71",
     charColor: "#2d5a35",
     excerpt: "Left and right side of the crack\nThey fight\nThey fiddle\nBut who's in the middle\nIt's Me?",
-    full: `Left and right side of the crack
-They fight
-They fiddle
-But who's in the middle
-It's Me?
-
-The really "cracked" me
-The really "calm" Me
-The really just "me"
-
-Well maybe I'm just the ugliness held between those two sides
-Well maybe I'm just stuck now
-Well maybe I'm just "me" now`
+    full: `Left and right side of the crack\nThey fight\nThey fiddle\nBut who's in the middle\nIt's Me?\n\nThe really "cracked" me\nThe really "calm" Me\nThe really just "me"\n\nWell maybe I'm just the ugliness held between those two sides\nWell maybe I'm just stuck now\nWell maybe I'm just "me" now`
   }
 ];
 
-// PIXEL CHARACTERS (SVG inline, different for each mood)
+// ORIGINAL ARTICLES & ESSAYS ARRAY
+const articles = [
+  {
+    num: "01",
+    title: "Nahi jaana par jaana padega",
+    snippet: "A deeply honest personal narrative exploration of life transitions, temporary settlements, and navigating emotional overwhelm.",
+    tag: "LinkedIn Post",
+    tagClass: "tag-reflect",
+    full: `"Nahi jaana par jaana padega."\n\nGrowing up, I used to think, kaash anywhere door hota.\nI still think the same.\n\nIt would’ve made life so easy.\nI could go anywhere I wanted, from wherever I was.\nI could hustle between things without losing pieces of myself.\n\nBut this enormous universe has galaxies of mysteries… and I don't know if this dream door will ever exist.\n\nStarting from my story…\nI went to my village.\nThen I had to leave that place and go to my nanihal.\nJust two days later, I had to leave that too and come back to Dehradun… just to prepare for moving out of Cantt.\n\nRight now, I’m sitting alone, feeling suffocated.\nNot because the room is small , but because I don’t have the strength or courage to step out.\n(There are multiple reasons… honestly, my life is a mess right now. Just like I am.)\n\nI inquired about what’s happening in school.\nAnd the more I heard, the more pressurized I felt.\nIt genuinely feels like I’m walking on a stoney path barefoot, just to reach somewhere…\nsomewhere I had already been a few days ago.\n\nTransitions feel bitter.\nBut maybe that’s where their sweetness hides.\n\nWhat do you think about transitions in life? How do you cope with the pressure of change? Share your thoughts with me in the comments. I’d love to hear how you navigate through these moments.`
+  },
+  {
+    num: "02",
+    title: "A Memorable Journey: Participating in the Youth Parliament",
+    snippet: "An insightful account documenting personal growth, collaboration, and overcoming public speaking fears within simulated chambers.",
+    tag: "Short Article",
+    tagClass: "tag-essay",
+    full: `Being an 11th grader comes with its own challenges. Just after returning from my hometown, I found myself buried in assignments and responsibilities. Amid all this chaos, one announcement caught my attention. Our school was organizing a Youth Parliament event. Although I already had so much on my plate, I decided to take part. It was my first time trying something like this, and I was not sure how it would go.\n\nAs I practiced my script and learned how to communicate my ideas clearly, I also got to connect with new classmates. Everyone was kind and supportive, guiding me through the process. It was a mix of sweet and bitter moments. The pressure was real, but so was the excitement.\n\nGradually, I gained confidence, and finally the day of the Youth Parliament arrived. Facing the judges and the audience, I felt nervous, but I focused on delivering my thoughts gracefully. Even though all eyes were on me, I concentrated on doing my best.\n\nWhen it was over, I was overwhelmed with praise not only for myself but also for my entire team. This experience taught me valuable lessons about teamwork, communication, and stepping outside my comfort zone.\n\nParticipating in the Youth Parliament during such a busy time was challenging, but it helped me grow in ways I never expected.`
+  },
+  {
+    num: "03",
+    title: "Description of the Skit on Winter Self-Care",
+    snippet: "A conversational breakdown of script dialogues crafted for the school radio layout, promoting healthy seasonal adjustments.",
+    tag: "Radio Skit Summary",
+    tagClass: "tag-social",
+    full: `Description of the Skit on Winter Self-Care\n\nOur school organized a skit performance on the school radio about how to take care of ourselves during winter. The skit had five members, and I was responsible for preparing the dialogues. The main idea was to spread awareness about the coming winter season and share simple yet important tips on how to stay healthy.\n\nIn the skit, we talked about the importance of wearing warm clothes, drinking nutritious soup, and generally taking good care of ourselves as the weather gets colder. The dialogue was conversational and easy to understand, aiming to remind everyone of basic winter care.\n\nWe practiced several times to make sure our delivery was clear and engaging. On the day of the performance, we went to the school radio station and presented our skit confidently. Our coordinators and teachers praised us for our efforts and the way we conveyed the message.\n\nThis experience helped me learn more about teamwork, preparation, and public speaking, and I felt proud to contribute to spreading such an important message.`
+  },
+  {
+    num: "04",
+    title: "Prepared, Not Scared: The Value of Being Ready",
+    snippet: "An exploration of preparedness as a shield against anxiety, shifting from the chaos of pending structural pressure to functional confidence.",
+    tag: "Analytical Essay",
+    tagClass: "tag-reflect",
+    full: `"Prepared?" Remember this question? Well, I do, because my teachers, friends, relatives, and even my family never miss a chance to ask it before any exam or function.\n\nBut what does it actually mean? And how does it help?\n\nBeing prepared isn't just about cramming for an exam or collecting facts before a meeting. It's about stepping into situations with confidence, persistence, and self-esteem. Preparedness has many faces:\nReady for obstacles that might trip you up.\nReady for emotions spiraling after a small incident.\nReady for meeting someone new.\nReady for outings, events, or even unexpected flashbacks from the past.\n\nYet, life isn't always that kind. Things happen suddenly, without warning. And sometimes, you aren't prepared at all. But when you are ready, you feel stronger, more grounded, less shaken.\n\nThink of it. Our days, months, years are full of events that test us. Not being prepared often feels like a sudden emptiness, like standing in the spotlight with no words to say. Yes, sometimes living in the moment gives momentum, but most times, preparation shields us from fear. We prepare through our thoughts, our routines, even through people around us, like moths drawn to a guiding light.\n\nNow, let's go deeper.\n\nEver wondered why you get that wave of anxiety, almost like FOMO, before an important event? The answer is simple. We are not prepared. And trust me, I've lived this.\n\nGrowing up, I was a decent student, but exams haunted me. The night before, I wouldn't revise calmly. I would strangle myself with the overwhelming syllabus, choking on pages I should have studied earlier. And trust me, it never helped. That fear came because I wasn't ready.\n\nThink about it. Imagine waking up one morning and deciding to go on a trip. No hotel booked, no route planned, no reservations. What will happen? The whole trip will collapse into chaos. That's exactly how life feels when we don't prepare. It steals our peace, productivity, and self-esteem.\n\nBeing prepared is like ironing your clothes a night before an important function instead of rushing to the closet last minute, throwing on something that "just works." Which version of you will shine more, the rushed one or the ready one? Exactly.\n\nAnd being ready means understanding and analyzing the situation instead of cramming it like your pending syllabus the night before. Being ready means making connections and knowing what to do in case of emergencies and obstacles. It's like stepping on stage for a dance performance, not to ruin it, but to own it, because you conquered your fear and refused to drown in an ocean of hopelessness. Instead, you prepared, and that made all the difference.\n\nLook around. Everyone around you is either prepared or maybe just living. People crave readiness, but sometimes the burden of not doing things, just because they feel like it, gets to their head and messes with their whole body, with lives connecting to it.\n\nLife works the same way. Organize it. Plan it. Prepare for it. And then shine in it, just the way your skin glows after you've done your skincare routine.`
+  },
+  {
+    num: "05",
+    title: "Dowry: An Identity for a Married Woman in Her Marriage Household",
+    snippet: "A critical social perspective mapping the structural evil of unlawful marriage transactions in traditional cultural frameworks.",
+    tag: "Social Article",
+    tagClass: "tag-essay",
+    full: `I'm a Rajasthani, and growing up, I've seen lakhs of rupees in dowry given by the bride's family to the groom's family. It's both heartbreaking and disgusting. Dowry includes cash, furniture, vehicles, and most importantly, it represents the aura and respect that the bride's family will carry for the rest of their lives.\n\nDowry is illegal in India, it's prohibited by the Dowry Prohibition Act, 1961, which clearly states that giving, taking, and demanding dowry is completely unlawful. However, many people have grown so accustomed to this tradition that they rarely complain or protest this illegal practice.\n\nIn many regions, dowry remains a symbol of power and sometimes a display of their wealth. The seriousness of this crime is often ignored, even though the punishment includes imprisonment for up to five years or a fine up to 15,000. I fully support strengthening these laws to make them more effective and strict.\n\nWhat's worse is that the dowry system causes immense suffering to brides and their families, sometimes even leading to death. While there are many such cases, sadly, few stand up for justice. In today's world, people might share stories and reels for a couple of days, but soon, these issues are forgotten. i remember once hearing someone say that dowry is a tradition, it has to be done.. and it broke my heart.\n\nHonestly, we need to raise real awareness. Dowry is not just an old tradition, it is a social evil that destroys lives.`
+  }
+];
+
+// PIXEL CHARACTER ON POEM CARDS
 function getPixelChar(color, charColor) {
   return `<svg width="24" height="28" viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
-    <!-- head -->
     <rect x="8" y="0" width="8" height="8" fill="${charColor}"/>
-    <!-- eyes -->
     <rect x="10" y="2" width="2" height="2" fill="${color}"/>
     <rect x="14" y="2" width="2" height="2" fill="${color}"/>
-    <!-- mouth -->
     <rect x="10" y="6" width="4" height="1" fill="${color}"/>
-    <!-- body -->
     <rect x="6" y="8" width="12" height="10" fill="${charColor}"/>
-    <!-- arms -->
     <rect x="2" y="8" width="4" height="4" fill="${charColor}"/>
     <rect x="18" y="8" width="4" height="4" fill="${charColor}"/>
-    <!-- legs -->
     <rect x="6" y="18" width="4" height="10" fill="${charColor}"/>
     <rect x="14" y="18" width="4" height="10" fill="${charColor}"/>
   </svg>`;
@@ -1193,7 +948,24 @@ poems.forEach((poem, i) => {
   grid.appendChild(card);
 });
 
-// OPEN/CLOSE MODAL
+// RENDER ESSAYS/ARTICLES DYNAMICALLY
+const articlesContainer = document.getElementById('articlesList');
+articles.forEach((art, i) => {
+  const row = document.createElement('div');
+  row.className = 'article-row';
+  row.setAttribute('onclick', `openArticle(${i})`);
+  row.innerHTML = `
+    <div class="article-num">${art.num}</div>
+    <div>
+      <p class="article-title">${art.title}</p>
+      <p class="article-snippet">${art.snippet}</p>
+      <span class="article-tag ${art.tagClass}">${art.tag}</span>
+    </div>
+  `;
+  articlesContainer.appendChild(row);
+});
+
+// OPEN POEM MODAL
 function openPoem(i) {
   const p = poems[i];
   document.getElementById('modal-theme').textContent = p.type + ' · ' + p.theme;
@@ -1202,8 +974,19 @@ function openPoem(i) {
   document.getElementById('poem-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
+// OPEN ARTICLE MODAL
+function openArticle(i) {
+  const a = articles[i];
+  document.getElementById('modal-theme').textContent = a.tag;
+  document.getElementById('modal-title').textContent = a.title;
+  document.getElementById('modal-poem').textContent = a.full;
+  document.getElementById('poem-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// CLOSE MODAL
 function closeModal() {
-  document.getElementById('poem-modal').classList.remove('remove');
   document.getElementById('poem-modal').classList.remove('open');
   document.body.style.overflow = '';
 }
@@ -1256,151 +1039,49 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 revealEls.forEach(el => observer.observe(el));
 
-
-/* ==========================================================================
-   ADVANCED WEB AUDIO API ENGINE: GENEATIVE CALM NATURE PIANO (PROPRIETARY)
-   ========================================================================== */
+// WEB AUDIO AMBIENT MUSIC
 let audioCtx = null;
 let musicOn = false;
-let ambientNodes = [];
-let pianoTimeout = null;
-
-// C-Major Pentatonic Scale for beautiful, completely safe harmonies
-const pianoScale = [130.81, 146.83, 164.81, 196.00, 220.00, 261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+let nodes = [];
 
 function startAmbience() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  
-  // Master control chain
-  const masterGain = audioCtx.createGain();
-  masterGain.gain.value = 0.55; 
-  masterGain.connect(audioCtx.destination);
+  const master = audioCtx.createGain();
+  master.gain.value = 0.08;
+  master.connect(audioCtx.destination);
 
-  // 1. GENERATE NATURE LAYERS (Rain & Rustling Trees using Custom Noise Buffers)
-  const bufferSize = audioCtx.sampleRate * 4;
-  const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-  const outputData = noiseBuffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    outputData[i] = Math.random() * 2 - 1;
-  }
-
-  const noiseSource = audioCtx.createBufferSource();
-  noiseSource.buffer = noiseBuffer;
-  noiseSource.loop = true;
-
-  // Nature Audio Filter Design (Bandpass creates rustling wind and soft rain drops)
-  const natureFilter = audioCtx.createBiquadFilter();
-  natureFilter.type = 'bandpass';
-  natureFilter.frequency.value = 450; 
-  natureFilter.Q.value = 0.4;
-
-  const natureGain = audioCtx.createGain();
-  natureGain.gain.value = 0.025; // Gentle baseline nature atmosphere level
-
-  // Modulate the wind with a low frequency automated swell
-  const windModulator = audioCtx.createOscillator();
-  windModulator.frequency.value = 0.15; // Slow 6-7 second wave cycle
-  const windGain = audioCtx.createGain();
-  windGain.gain.value = 150; // Sweeps back and forth through frequencies
-
-  windModulator.connect(windGain);
-  windGain.connect(natureFilter.frequency);
-  noiseSource.connect(natureFilter);
-  natureFilter.connect(natureGain);
-  natureGain.connect(masterGain);
-
-  windModulator.start();
-  noiseSource.start();
-
-  ambientNodes.push(windModulator, noiseSource, natureFilter, natureGain);
-
-  // 2. GENERATE PEACEFUL BACKGROUND SYNTH PADS
-  const padFrequencies = [130.81, 196.00, 329.63, 440.00]; // Multi-octave background canvas
-  padFrequencies.forEach((frequency) => {
-    const oscillator = audioCtx.createOscillator();
-    const padGain = audioCtx.createGain();
-    
-    oscillator.type = 'sine';
-    oscillator.frequency.value = frequency;
-    padGain.gain.value = 0.015;
-
-    oscillator.connect(padGain);
-    padGain.connect(masterGain);
-    oscillator.start();
-
-    ambientNodes.push(oscillator, padGain);
+  const freqs = [261.63, 329.63, 392.00, 493.88, 523.25];
+  freqs.forEach((f, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = f;
+    gain.gain.value = 0.18;
+    osc.connect(gain);
+    gain.connect(master);
+    osc.start();
+    nodes.push(osc);
   });
 
-  // 3. TRIGGER DELAYED GENERATIVE PIANO GENERATOR
-  triggerGenerativePiano(masterGain);
-}
-
-function triggerGenerativePiano(destinationNode) {
-  if (!musicOn || !audioCtx) return;
-
-  // Pick a relaxing random note from our gorgeous pentatonic collection
-  const selectedFrequency = pianoScale[Math.floor(Math.random() * pianoScale.length)];
-  
-  // Emulate physical organic hammer strikes via rapid multi-component synthesis
-  const oscillator1 = audioCtx.createOscillator();
-  const oscillator2 = audioCtx.createOscillator();
-  const pianoGain = audioCtx.createGain();
-
-  oscillator1.type = 'sine';
-  oscillator1.frequency.value = selectedFrequency;
-  
-  // Second tone frequency overtone mimics realistic wooden soundbox resonance
-  oscillator2.type = 'triangle';
-  oscillator2.frequency.value = selectedFrequency * 2;
-
-  // Custom Biquad Lowpass filter prevents electronic sharpness, keeping the piano soft and warm
-  const warmToneFilter = audioCtx.createBiquadFilter();
-  warmToneFilter.type = 'lowpass';
-  warmToneFilter.frequency.value = 1100;
-
-  pianoGain.connect(warmToneFilter);
-  warmToneFilter.connect(destinationNode);
-
-  // Reverb & Decay Volume Envelope calculations
-  const immediateTime = audioCtx.currentTime;
-  pianoGain.gain.setValueAtTime(0, immediateTime);
-  
-  // Instant piano key hit execution
-  pianoGain.gain.linearRampToValueAtTime(Math.random() * 0.12 + 0.06, immediateTime + 0.04);
-  
-  // Smooth, lingering eco trail release mimicking pedal sustain
-  pianoGain.gain.exponentialRampToValueAtTime(0.0001, immediateTime + 4.5);
-
-  oscillator1.connect(pianoGain);
-  oscillator2.connect(pianoGain);
-  
-  oscillator1.start(immediateTime);
-  oscillator2.start(immediateTime);
-
-  // Safely stop background processors after decay finish lines
-  oscillator1.stop(immediateTime + 4.6);
-  oscillator2.stop(immediateTime + 4.6);
-
-  // Set completely randomized rhythmic timing separation parameters for human-like intervals
-  const nextNoteDelay = Math.random() * 2200 + 1400; // Plays sequentially every 1.5 to 3.5 seconds
-  pianoTimeout = setTimeout(() => triggerGenerativePiano(destinationNode), nextNoteDelay);
+  const bufSize = audioCtx.sampleRate * 2;
+  const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1) * 0.02;
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+  const nGain = audioCtx.createGain();
+  nGain.gain.value = 0.06;
+  src.connect(nGain);
+  nGain.connect(master);
+  src.start();
+  nodes.push(src);
 }
 
 function stopAmbience() {
-  // Clear any pending generative note calculations safely
-  if (pianoTimeout) {
-    clearTimeout(pianoTimeout);
-    pianoTimeout = null;
-  }
-  
-  // Disconnect and wipe working audio processors immediately
-  ambientNodes.forEach(node => {
-    try { node.stop(); } catch(e) {}
-    try { node.disconnect(); } catch(e) {}
-  });
-  ambientNodes = [];
-  
-  if (audioCtx) {
+  if(audioCtx) {
+    nodes.forEach(n => { try { n.stop(); } catch(e){} });
+    nodes = [];
     audioCtx.close();
     audioCtx = null;
   }
